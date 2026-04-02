@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "contao/core-bundle": ">=5.7"
+    "contao/core-bundle": ">=5.3"
   },
   "conflict": {
     "contao/manager-plugin": "<2.0 || >=3.0"
