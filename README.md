@@ -5,12 +5,18 @@ your Contao theme.
 
 ## Features
 
--   Upload and/or select an SVG sprite within your theme\
--   Reference individual `<symbol>` elements via insert tags\
--   Optional width and height parameters for flexible rendering\
--   (Planned) Visual icon picker for selecting symbols\
+-   Upload and/or select an SVG sprite within your theme
+-   Reference individual `<symbol>` elements via insert tags
+-   Optional width and height parameters for flexible rendering
+-   (Planned) Visual icon picker for selecting symbols
 -   (Planned) Dynamic SVG sprite generation via Contao (instead of
     loading from the file system)
+
+## Installation
+
+```
+composer require plakart/contao-svg-sprite-bundle
+```
 
 ## Usage
 
