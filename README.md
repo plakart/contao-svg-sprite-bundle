@@ -1,0 +1,1 @@
+# contao-svg-sprite-bundle
