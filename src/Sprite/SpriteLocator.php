@@ -88,6 +88,37 @@ class SpriteLocator implements ResetInterface
     }
 
     /**
+     * Returns the absolute path of the theme's sprite file or null.
+     */
+    public function getSpritePath(int $themeId): string|null
+    {
+        $sprite = $this->getSpriteForTheme($themeId);
+
+        return $sprite ? $this->projectDir.'/'.$sprite['path'] : null;
+    }
+
+    /**
+     * Returns all themes that have a sprite file (ID => name).
+     *
+     * @return array<int, string>
+     */
+    public function getThemesWithSprite(): array
+    {
+        $this->framework->initialize();
+
+        $themes = $this->framework->getAdapter(ThemeModel::class)->findAll(['order' => 'name']);
+        $result = [];
+
+        foreach ($themes ?? [] as $theme) {
+            if (null !== $this->getSpriteForTheme((int) $theme->id)) {
+                $result[(int) $theme->id] = (string) $theme->name;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the URL of the sprite file (including a cache busting parameter)
      * if the theme of the current page references it externally, otherwise
      * null (symbols then refer to the inline sprite in the same document).

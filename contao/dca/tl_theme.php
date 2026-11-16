@@ -15,7 +15,7 @@ declare(strict_types=1);
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 PaletteManipulator::create()
-    ->addField(['svgSpriteFile', 'svgSpriteMode'], 'templates')
+    ->addField(['svgSpriteFile', 'svgSpriteMode', 'svgSpriteSymbols'], 'templates')
     ->applyToPalette('default', 'tl_theme')
 ;
 
@@ -32,3 +32,6 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['svgSpriteMode'] = [
     'eval'      => ['tl_class'=>'w50'],
     'sql'       => "varchar(16) NOT NULL default 'inline'"
 ];
+
+// Symbol overview, rendered by ThemeSymbolOverviewListener (no database column)
+$GLOBALS['TL_DCA']['tl_theme']['fields']['svgSpriteSymbols'] = [];

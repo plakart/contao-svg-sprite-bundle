@@ -5,4 +5,4 @@ services:
 
   Plakart\ContaoSvgSpriteBundle\:
     resource: ../src
-    exclude: ../src/{ContaoManager,ContaoSvgSpriteBundle.php}
+    exclude: ../src/{ContaoManager,Widget,ContaoSvgSpriteBundle.php}
