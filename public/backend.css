@@ -1,0 +1,131 @@
+/*
+ * This file is part of ContaoSvgSpriteBundle.
+ *
+ * Symbol overview and svgSymbol widget in the Contao backend.
+ */
+.svg-sprite {
+    margin-top: 3px;
+}
+
+.svg-sprite [hidden] {
+    display: none !important;
+}
+
+.svg-sprite__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.svg-sprite__search.tl_text {
+    max-width: 320px;
+}
+
+.svg-sprite__count {
+    flex-shrink: 0;
+    color: var(--info, #6a6a6c);
+    font-size: .75rem;
+}
+
+.svg-sprite__theme {
+    margin: 12px 0 6px;
+    font-size: .8rem;
+}
+
+.svg-sprite__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 6px;
+    margin: 0 0 6px;
+    padding: 0;
+    list-style: none;
+}
+
+.svg-sprite--picker {
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.svg-sprite__item {
+    position: relative;
+    margin: 0;
+}
+
+.svg-sprite__tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 10px 4px 6px;
+    border: 1px solid var(--form-border, #d0d0d2);
+    border-radius: 4px;
+    background: var(--form-bg, #fff);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.svg-sprite__tile:hover {
+    border-color: var(--form-border-hover, #a6a6a8);
+}
+
+/* Fixed light background, so dark icons are visible in the dark mode, too */
+.svg-sprite__tile img,
+.svg-sprite__none {
+    box-sizing: content-box;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    border-radius: 3px;
+    background: #fff;
+}
+
+.svg-sprite__none {
+    display: grid;
+    place-items: center;
+    color: #6a6a6c;
+    font-size: 20px;
+}
+
+.svg-sprite__id {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: .7rem;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Radio visually hidden but focusable */
+.svg-sprite__radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+}
+
+.svg-sprite__radio:checked + .svg-sprite__tile,
+.svg-sprite__tile.is-copied {
+    border-color: var(--contao, #f47c00);
+    box-shadow: 0 0 0 1px var(--contao, #f47c00);
+}
+
+.svg-sprite__radio:focus-visible + .svg-sprite__tile,
+.svg-sprite__tile:focus-visible {
+    outline: 2px solid var(--contao, #f47c00);
+    outline-offset: 2px;
+}
+
+.svg-sprite__status {
+    min-height: 1.2em;
+    margin: 0;
+    color: var(--green, #589b0e);
+    font-size: .75rem;
+}

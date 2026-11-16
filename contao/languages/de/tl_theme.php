@@ -26,3 +26,8 @@ $GLOBALS['TL_LANG']['tl_theme']['svgSpriteModes'] = [
     'inline'   => 'Inline im HTML',
     'external' => 'Als Datei referenzieren',
 ];
+
+$GLOBALS['TL_LANG']['tl_theme']['svgSpriteSymbols'] = [
+    'Symbole im Sprite',
+    'Ein Klick kopiert das Insert-Tag in die Zwischenablage.'
+];
