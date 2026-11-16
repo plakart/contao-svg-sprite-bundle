@@ -16,3 +16,13 @@ $GLOBALS['TL_LANG']['tl_theme']['svgSpriteFile'] = [
     'SVG sprite file',
     'Select/upload the SVG sprite file.'
 ];
+
+$GLOBALS['TL_LANG']['tl_theme']['svgSpriteMode'] = [
+    'Sprite embedding',
+    'Inline: the sprite is embedded in the HTML of every page. As file: icons reference the file, which the browser can cache. The file must be public.'
+];
+
+$GLOBALS['TL_LANG']['tl_theme']['svgSpriteModes'] = [
+    'inline'   => 'Inline in the HTML',
+    'external' => 'Reference as file',
+];
