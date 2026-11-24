@@ -14,14 +14,24 @@ declare(strict_types=1);
 
 namespace Plakart\ContaoSvgSpriteBundle\Sprite;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 /**
  * Renders the <svg><use> markup for a sprite symbol. Shared by the insert tag
  * and the Twig function, so both produce identical output.
+ *
+ * In the back end (e.g. previews of content elements) there is no sprite in the
+ * document, so the symbol content is inlined instead of referenced.
  */
 class SymbolRenderer
 {
-    public function __construct(private readonly SpriteLocator $spriteLocator)
-    {
+    public function __construct(
+        private readonly SpriteLocator $spriteLocator,
+        private readonly SymbolLibrary $symbolLibrary,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     /**
@@ -59,9 +69,29 @@ class SymbolRenderer
             $attributes['focusable'] = 'false';
         }
 
+        if ($this->isBackendRequest() && ($symbol = $this->symbolLibrary->findSymbol($id))) {
+            $attributes['viewBox'] = $symbol['viewBox'];
+
+            // The front end CSS is not loaded in the back end, so prevent the
+            // icon from filling the whole preview
+            if (!isset($attributes['width']) && !isset($attributes['height'])) {
+                $attributes['width'] = $attributes['height'] = '1em';
+            }
+
+            // The markup is sanitized by the SymbolLibrary
+            return \sprintf('<svg%s>%s</svg>', $this->renderAttributes($attributes), $symbol['markup']);
+        }
+
         $href = ($this->spriteLocator->getExternalUrlForCurrentPage() ?? '').'#'.$id;
 
         return \sprintf('<svg%s><use href="%s"/></svg>', $this->renderAttributes($attributes), $this->escape($href));
+    }
+
+    private function isBackendRequest(): bool
+    {
+        $request = $this->requestStack->getMainRequest();
+
+        return null !== $request && $this->scopeMatcher->isBackendRequest($request);
     }
 
     /**
