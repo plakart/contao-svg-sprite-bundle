@@ -27,7 +27,7 @@ class SymbolLibrary implements ResetInterface
     private const SVG_NS = 'http://www.w3.org/2000/svg';
 
     /**
-     * @var array<int, list<array{id: string, preview: string}>>
+     * @var array<int, list<array{id: string, viewBox: string, markup: string, preview: string}>>
      */
     private array $symbolsByTheme = [];
 
@@ -41,7 +41,7 @@ class SymbolLibrary implements ResetInterface
     }
 
     /**
-     * @return list<array{id: string, preview: string}>
+     * @return list<array{id: string, viewBox: string, markup: string, preview: string}>
      */
     public function getSymbols(int $themeId): array
     {
@@ -62,7 +62,7 @@ class SymbolLibrary implements ResetInterface
      * Returns the symbols grouped by theme. Without a theme ID, all themes
      * with a sprite are returned.
      *
-     * @return array<int, array{name: string, symbols: list<array{id: string, preview: string}>}>
+     * @return array<int, array{name: string, symbols: list<array{id: string, viewBox: string, markup: string, preview: string}>}>
      */
     public function getSymbolsByTheme(int|null $themeId = null): array
     {
@@ -80,7 +80,26 @@ class SymbolLibrary implements ResetInterface
     }
 
     /**
-     * @return list<array{id: string, preview: string}>
+     * Finds a symbol by ID in the sprites of all themes (first match wins).
+     * Used where there is no current page, e.g. previews in the back end.
+     *
+     * @return array{id: string, viewBox: string, markup: string, preview: string}|null
+     */
+    public function findSymbol(string $id): array|null
+    {
+        foreach ($this->getSymbolsByTheme() as $group) {
+            foreach ($group['symbols'] as $symbol) {
+                if ($symbol['id'] === $id) {
+                    return $symbol;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<array{id: string, viewBox: string, markup: string, preview: string}>
      */
     private function parse(string $content): array
     {
@@ -96,6 +115,8 @@ class SymbolLibrary implements ResetInterface
         if (!$loaded) {
             return [];
         }
+
+        $this->sanitize($document);
 
         // Shared definitions outside of symbols (e.g. gradients in <defs>)
         $defs = '';
@@ -137,10 +158,40 @@ class SymbolLibrary implements ResetInterface
 
             $symbols[] = [
                 'id' => $id,
+                'viewBox' => $viewBox,
+                'markup' => $inner,
                 'preview' => 'data:image/svg+xml;base64,'.base64_encode($svg),
             ];
         }
 
         return $symbols;
+    }
+
+    /**
+     * The symbol markup is inlined into back end pages, so remove everything
+     * that could execute code, change the page styles or load resources.
+     */
+    private function sanitize(\DOMDocument $document): void
+    {
+        $xpath = new \DOMXPath($document);
+
+        $elements = $xpath->query('//*[contains("|script|style|foreignObject|iframe|object|embed|image|handler|listener|", concat("|", local-name(), "|"))]');
+
+        foreach (iterator_to_array($elements ?: []) as $element) {
+            $element->parentNode?->removeChild($element);
+        }
+
+        foreach (iterator_to_array($xpath->query('//@*') ?: []) as $attribute) {
+            $name = strtolower($attribute->localName);
+            $value = trim($attribute->value);
+
+            $remove = str_starts_with($name, 'on')
+                || ('href' === $name && !str_starts_with($value, '#'))
+                || preg_match('/url\(\s*[\'"]?\s*(?!#)/i', $value);
+
+            if ($remove) {
+                $attribute->ownerElement?->removeAttributeNode($attribute);
+            }
+        }
     }
 }

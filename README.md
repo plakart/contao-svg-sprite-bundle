@@ -62,6 +62,14 @@ Optional parameters:
 The insert tag and the Twig function share the same renderer and produce
 identical output.
 
+In the back end (e.g. the preview of content elements in the article view)
+there is no sprite in the document. There the symbol content is inlined
+into the `<svg>` instead of referenced via `<use>`, so the icons are visible
+in previews too. Scripts, styles, event handlers and external references
+are removed. Without `width`/`height` the icon gets a size of `1em`. If
+several themes have a symbol with the same ID, the first theme (by name)
+is used for the preview.
+
 ### Symbol overview
 
 After selecting a sprite, the theme settings show all symbols of the sprite
